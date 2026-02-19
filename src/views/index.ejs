@@ -1,0 +1,23 @@
+<html>
+  <head>
+    <!-- <link rel="stylesheet" href="/styles.css"> -->
+    <title> <%= title %> </title>
+  </head>
+  <body>
+    <button>
+      <a href="/new">Add New Message</a>
+    </button>
+    <ul>
+      <% messages.forEach((message, index) => { %>
+        <li>
+          <h1> <%= message.user %> </h1>
+          <p> <%= message.text %> </p>
+          <p> <%= message.added %> </p>
+          <button>
+            <a href=message/<%= index %>>Open</a>
+          </button>
+        </li>
+      <% }); %>
+    </ul>
+  </body>
+</html>
