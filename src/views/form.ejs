@@ -7,12 +7,18 @@
     <form method="post" action="/new">
       <label>
         <span>Author Name: </span>
-        <input type="text" name="messageUser">
+        <input type="text" name="messageUser" value="<%= values?.messageUser || '' %>">
+        <% if (errors?.messageUser) { %>
+          <p style="color:red;"><%= errors.messageUser %></p>
+        <% } %>
       </label>
 
       <label>
         <span>Message: </span>
-        <textarea name="messageText"></textarea>
+        <textarea name="messageText"><%= values ? values.messageText : '' %></textarea>
+        <% if (errors?.messageText) { %>
+          <p style="color:red;"><%= errors.messageText %></p>
+        <% } %>
       </label>
 
       <button type="submit">Submit</button>
