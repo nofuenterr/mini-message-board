@@ -1,11 +1,12 @@
-import { messages } from '../db.js';
+import { getMessageById } from '../db/queries.js';
 
 export async function getMessage(req, res) {
-  const { index } = req.params
+  const { id } = req.params
+  const [message] = await getMessageById(id)
 
-  if (!messages[index]) {
+  if (!message) {
     throw new CustomNotFoundError('Message not found')
   }
 
-  res.render("message", { message: messages[index] });
+  res.render("message", { message: message });
 };

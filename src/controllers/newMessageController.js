@@ -1,11 +1,10 @@
-import { messages } from '../db.js';
-
 import { body, validationResult, matchedData } from 'express-validator';
+import { insertMessage } from '../db/queries.js';
 
 // const alphaErr = "must only contain letters.";
-const messageUserMaxLength = 15;
+const messageAuthorMaxLength = 15;
 const messageTextMaxLength = 80;
-const userLengthErr = `must be between 1 and ${messageUserMaxLength} characters.`;
+const authorLengthErr = `must be between 1 and ${messageAuthorMaxLength} characters.`;
 const textLengthErr = `must be between 1 and ${messageTextMaxLength} characters.`;
 
 function buildErrorObject(errors) {
@@ -25,30 +24,29 @@ export async function getNewMessageForm(req, res) {
   });
 };
 
-export const validateUser = [
-  body("messageUser").trim()
-    .isLength({ min: 1, max: messageUserMaxLength }).withMessage(`Message user ${userLengthErr}`),
+export const validateAuthor = [
+  body("messageAuthor").trim()
+    .isLength({ min: 1, max: messageAuthorMaxLength }).withMessage(`Message author ${authorLengthErr}`),
   body("messageText").trim()
     .isLength({ min: 1, max: messageTextMaxLength }).withMessage(`Message text ${textLengthErr}`),
 ];
 
 export async function createMessage(req, res) {
   const errors = validationResult(req);
-  const { messageText, messageUser } = matchedData(req);
+  const { messageText, messageAuthor } = matchedData(req);
   const errorObj = buildErrorObject(errors);
 
   if (!errors.isEmpty()) {
     return res.status(400).render("form", {
-      values: { messageText, messageUser },
+      values: { messageText, messageAuthor },
       errors: errorObj,
     });
   }
 
-  messages.push({
+  await insertMessage({
+    author: messageAuthor,
     text: messageText,
-    user: messageUser,
-    added: new Date(),
-  });
+  })
 
   res.redirect("/");
 }

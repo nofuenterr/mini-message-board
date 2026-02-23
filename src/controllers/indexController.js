@@ -1,6 +1,8 @@
-import { messages } from '../db.js';
+import { getAllMessages } from "../db/queries.js";
 
 export async function getMessages(req, res) {
+  const messages = await getAllMessages();
+
   if (!messages) {
     throw new CustomNotFoundError('Messages not found')
   }
