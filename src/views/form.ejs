@@ -7,9 +7,9 @@
     <form method="post" action="/new">
       <label>
         <span>Author Name: </span>
-        <input type="text" name="messageUser" value="<%= values?.messageUser || '' %>">
-        <% if (errors?.messageUser) { %>
-          <p style="color:red;"><%= errors.messageUser %></p>
+        <input type="text" name="messageAuthor" value="<%= values?.messageAuthor || '' %>">
+        <% if (errors?.messageAuthor) { %>
+          <p style="color:red;"><%= errors.messageAuthor %></p>
         <% } %>
       </label>
 

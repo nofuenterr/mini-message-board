@@ -1,10 +1,8 @@
 import { Router } from 'express'
-import { messages } from '../db.js';
+import { getMessages } from '../controllers/indexController.js';
 
 const indexRouter = Router()
 
-indexRouter.get("/", (req, res) => {
-  res.render("index", { title: "Mini Messageboard", messages: messages });
-});
+indexRouter.get("/", getMessages);
 
 export default indexRouter
