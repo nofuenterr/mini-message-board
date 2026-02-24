@@ -18,11 +18,24 @@ VALUES
   ('Sherlock', 'I''m on the case');
 `;
 
+const isProduction = process.env.DATABASE_URL;
+
+const connectionConfig = isProduction
+  ? {
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+    }
+  : {
+      host: process.env.HOST,
+      user: process.env.USER,
+      password: process.env.PASSWORD,
+      database: process.env.DATABASE,
+      port: process.env.DB_PORT || 5432,
+    };
+
 async function main() {
   console.log("seeding...");
-  const client = new Client({
-    connectionString: `postgresql://${process.env.USER}:${process.env.PASSWORD}@${process.env.HOST}:${process.env.DB_PORT || 5432}/${process.env.DATABASE}`,
-  });
+  const client = new Client(connectionConfig);
   await client.connect();
   await client.query(SQL);
   await client.end();
