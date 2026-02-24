@@ -18,28 +18,36 @@ VALUES
   ('Sherlock', 'I''m on the case');
 `;
 
-const isProduction = process.env.DATABASE_URL;
+async function main() {
+  const dbUrl = process.argv[2];
 
-const connectionConfig = isProduction
-  ? {
-      connectionString: process.env.DATABASE_URL,
+  let connectionConfig;
+
+  if (dbUrl) {
+    connectionConfig = {
+      connectionString: dbUrl,
       ssl: { rejectUnauthorized: false },
-    }
-  : {
+    };
+  } else {
+    connectionConfig = {
       host: process.env.HOST,
       user: process.env.USER,
       password: process.env.PASSWORD,
       database: process.env.DATABASE,
       port: process.env.DB_PORT || 5432,
     };
+  }
 
-async function main() {
-  console.log("seeding...");
-  const client = new Client(connectionConfig);
-  await client.connect();
-  await client.query(SQL);
-  await client.end();
-  console.log("done");
+  try {
+    console.log("Seeding database...");
+    const client = new Client(connectionConfig);
+    await client.connect();
+    await client.query(SQL);
+    await client.end();
+    console.log("✅ Done");
+  } catch (err) {
+    console.error("❌ Error seeding database:", err);
+  }
 }
 
 main();
